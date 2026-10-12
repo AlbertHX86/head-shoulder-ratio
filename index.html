@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>头肩比测试器</title>
+<meta name="description" content="头肩比测试器 · Shoulder-to-Head Ratio Tester — 拍照标点，测头肩比与三庭五眼，照片只在本地处理 / Mark a photo to measure your shoulder-to-head ratio and facial thirds & fifths, processed locally in your browser.">
+<link rel="alternate" hreflang="zh" href="https://alberthx86.github.io/head-shoulder-ratio/?lang=zh">
+<link rel="alternate" hreflang="en" href="https://alberthx86.github.io/head-shoulder-ratio/?lang=en">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
@@ -14,6 +17,15 @@
     min-height: 100%; padding: 24px 16px 40px;
   }
   .wrap { width: 100%; max-width: 720px; }
+
+  /* ---------- 语言切换 ---------- */
+  .lang-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+  .lang { display: flex; border: 1px solid #d2d2d7; border-radius: 980px; padding: 2px; }
+  .lang button {
+    font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 980px;
+    background: transparent; color: #6e6e73;
+  }
+  .lang button.active { background: #1d1d1f; color: #fff; }
   h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; text-align: center; }
   .subtitle { color: #86868b; font-size: 15px; text-align: center; margin: 8px 0 24px; }
 
@@ -100,14 +112,20 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>头肩比测试器</h1>
-  <p class="subtitle">拍一张正面照，标四个点，看看你是哪种肩</p>
+  <div class="lang-bar">
+    <div class="lang" role="group" aria-label="Language / 语言">
+      <button type="button" id="langZh" lang="zh-CN">中文</button>
+      <button type="button" id="langEn" lang="en">EN</button>
+    </div>
+  </div>
+  <h1 data-i18n="title">头肩比测试器</h1>
+  <p class="subtitle" data-i18n="subtitle">拍一张正面照，标四个点，看看你是哪种肩</p>
 
   <div class="card">
     <!-- 取景 -->
     <div id="viewStage">
       <video id="video" autoplay playsinline muted></video>
-      <div class="hint" id="viewHint">正对镜头，肩膀放松，头顶留出空间</div>
+      <div class="hint" id="viewHint" data-i18n="viewHint">正对镜头，肩膀放松，头顶留出空间</div>
     </div>
 
     <!-- 定格标点 -->
@@ -117,25 +135,25 @@
     </div>
 
     <div class="controls">
-      <button class="btn-primary" id="btnStart">开启摄像头</button>
-      <button class="btn-secondary" id="btnMirror" style="display:none">镜像</button>
-      <button class="btn-primary" id="btnSnap" style="display:none">拍照定格</button>
-      <button class="btn-secondary" id="btnUpload" style="display:none">上传照片</button>
+      <button class="btn-primary" id="btnStart" data-i18n="start">开启摄像头</button>
+      <button class="btn-secondary" id="btnMirror" style="display:none" data-i18n="mirror">镜像</button>
+      <button class="btn-primary" id="btnSnap" style="display:none" data-i18n="snap">拍照定格</button>
+      <button class="btn-secondary" id="btnUpload" style="display:none" data-i18n="upload">上传照片</button>
       <input type="file" id="fileInput" accept="image/*" style="display:none">
-      <button class="btn-secondary" id="btnRetake" style="display:none">重拍</button>
+      <button class="btn-secondary" id="btnRetake" style="display:none" data-i18n="retake">重拍</button>
       <div class="seg" id="sexSeg">
-        <button type="button" id="sexM" class="active">男性标准</button>
-        <button type="button" id="sexF">女性标准</button>
+        <button type="button" id="sexM" class="active" data-i18n="sexM">男性标准</button>
+        <button type="button" id="sexF" data-i18n="sexF">女性标准</button>
       </div>
       <div class="seg" id="modeSeg">
-        <button type="button" id="modeHS" class="active">头肩比</button>
-        <button type="button" id="modeFace">三庭五眼</button>
+        <button type="button" id="modeHS" class="active" data-i18n="modeHS">头肩比</button>
+        <button type="button" id="modeFace" data-i18n="modeFace">三庭五眼</button>
       </div>
     </div>
     <p class="err" id="errMsg"></p>
   </div>
 
-  <div class="howto" id="legendHS">
+  <div class="howto" id="legendHS" data-i18n="legendHS">
     <h3>头肩比 · 使用说明</h3>
     <ol>
       <li>画面上有 <b>4 个十字准星</b>，用鼠标或手指<b>按住拖动</b>到对应位置</li>
@@ -146,7 +164,7 @@
     <div class="tip">头肩比 = 肩宽 ÷ 头宽 · 正对镜头平视，别仰拍俯拍，标得越准结果越准 · 可用上方「三庭五眼」标签切换测量脸部</div>
   </div>
 
-  <div class="howto" id="legendFace" style="display:none">
+  <div class="howto" id="legendFace" style="display:none" data-i18n="legendFace">
     <h3>三庭五眼 · 使用说明</h3>
     <ol>
       <li>画面上有 <b>10 个十字准星</b>，用鼠标或手指<b>按住拖动</b>到对应位置</li>
@@ -172,7 +190,7 @@
         <div class="bar"><div class="std-band" id="stdBand"></div><div class="bar-marker" id="barMarker" style="left:0%"></div></div>
         <div id="youAreHere"></div>
       </div>
-      <div style="font-size:11px;color:#a1a1a6;margin-top:14px;text-align:center">
+      <div style="font-size:11px;color:#a1a1a6;margin-top:14px;text-align:center" data-i18n="hsSource">
         数据依据：ANSUR II 2012 年美军人体测量调查（男 4,082 人 / 女 1,986 人）逐人计算的头肩比分布
       </div>
     </div>
@@ -181,13 +199,13 @@
       <div id="faceScore">--<small> 分</small></div>
       <div id="faceVerdict"></div>
       <div id="faceDetail"></div>
-      <div style="font-size:11px;color:#a1a1a6;margin-top:14px;text-align:center">
+      <div style="font-size:11px;color:#a1a1a6;margin-top:14px;text-align:center" data-i18n="faceSource">
         三庭五眼是中国传统画论与面相学的审美参照（理想：三庭等长、脸宽五眼），属古典审美标准而非医学标准
       </div>
     </div>
   </div>
 
-  <footer>
+  <footer data-i18n="footer">
     纯娱乐向小工具 · 所有处理均在本地浏览器完成，照片不会上传<br>
     建议正对镜头、平视、不仰拍不俯拍；头肩比：头点取头部最宽处、肩点取肩峰；三庭五眼：露出额头、头发别遮发际线<br>
     头肩比判档基于 ANSUR II 军人测量数据（卡尺测肩峰间距/头上最宽处）；三庭五眼为传统审美参照。照片含头发且镜头有透视，结果仅供参考
@@ -197,6 +215,122 @@
 <script>
 (function () {
   'use strict';
+
+  /* ================= 多语言 ================= */
+  // 静态文案：中文直接取页面原文（data-i18n 元素的 innerHTML），英文在 I18N.en 中；动态文案两种语言都在下面
+  var DOT = function (c) { return '<span class="dot" style="background:' + c + '"></span>'; };
+  var I18N = {
+    zh: {
+      title: '头肩比测试器',
+      start: '开启摄像头', starting: '正在开启…',
+      errNoCam: '当前浏览器不支持摄像头（需要 HTTPS 或本地文件环境下的现代浏览器）',
+      errDenied: '摄像头权限被拒绝，请在浏览器地址栏允许摄像头访问后重试',
+      errNotFound: '没有检测到可用摄像头，可改用「上传照片」',
+      errBusy: '摄像头被其他应用占用，请关闭后重试',
+      errStart: '摄像头开启失败：',
+      errImg: '图片读取失败，请换一张试试',
+      hsHeadL: '头左端', hsHeadR: '头右端', hsShL: '左肩峰', hsShR: '右肩峰',
+      fHair: '发际线', fBrow: '眉心', fNose: '鼻底', fChin: '下巴尖',
+      fFaceL: '左脸缘', fEyeLO: '左眼外角', fEyeLI: '左眼内角', fEyeRI: '右眼内角', fEyeRO: '右眼外角', fFaceR: '右脸缘',
+      eyeSegs: ['左脸缘', '左眼', '眼距', '右眼', '右脸缘'],
+      upper: '上庭', middle: '中庭', lower: '下庭', eyeUnit: '眼',
+      male: '男性', female: '女性',
+      vXN: '极窄肩 · 比大约95%的同性还窄', vN: '偏窄肩 · 清秀型', vAvg: '标准肩 · 一半人都在这个区间',
+      vB: '宽肩 · 天生衣架子', vXB: '超宽肩 · 宽进前5%的西装天赋',
+      hsDetail: function (s, h, n, p, p50) {
+        return '肩宽 ' + s + ' px ÷ 头宽 ' + h + ' px' +
+          '<br>你的头肩比超过 ANSUR II ' + n + '样本中约 <b>' + p + '%</b> 的人（' + n + 'P50 = ' + p50 + '）';
+      },
+      band: function (n) { return '灰色带 = ' + n + ' P25~P75（中间一半人的区间）· 刻度 2.1 ~ 3.1'; },
+      scoreUnit: '<small> 分</small>',
+      fv1: '教科书级骨相 · 三庭五眼很正', fv2: '相当标致 · 比例协调', fv3: '基本端正 · 自然耐看', fv4: '个性脸 · 自成风格',
+      faceDetail: function (a, b, c, eyeLine, faceW) {
+        return '<b>三庭</b>（理想 1.00× 等长）：上庭 ' + a + '× · 中庭 ' + b + '× · 下庭 ' + c + '×<br>' +
+          '<b>五眼</b>（理想各 1.00 眼）：' + eyeLine + '<br>' +
+          '脸宽合计 <b>' + faceW + '</b> 眼（理想 5.00 眼）';
+      }
+    },
+    en: {
+      title: 'Shoulder-to-Head Ratio Tester',
+      subtitle: 'Take a front-facing photo, place four points, and see where your shoulders rank',
+      viewHint: 'Face the camera, relax your shoulders, and leave room above your head',
+      start: 'Start camera', starting: 'Starting…',
+      mirror: 'Mirror', snap: 'Take photo', upload: 'Upload photo', retake: 'Retake',
+      sexM: 'Male norms', sexF: 'Female norms',
+      modeHS: 'Shoulder ratio', modeFace: 'Thirds & fifths',
+      legendHS:
+        '<h3>Shoulder-to-head ratio · How to use</h3><ol>' +
+        '<li>There are <b>4 crosshairs</b> on the photo. <b>Press and drag</b> each one into place with your mouse or finger</li>' +
+        '<li>' + DOT('#ff3b30') + 'Head left and ' + DOT('#ff9f0a') + 'head right: drag to the <b>widest part of the head</b> (about temple height), both on the same horizontal line</li>' +
+        '<li>' + DOT('#0071e3') + 'Left shoulder and ' + DOT('#bf5af2') + 'right shoulder: drag to the <b>outermost top point of each shoulder joint</b> (the acromion), both on the same horizontal line</li>' +
+        '<li>Hovering over or dragging a crosshair shows its name and the length of its line. When you\'re done, check the result card below</li>' +
+        '</ol><div class="tip">Ratio = shoulder width ÷ head width · Face the camera at eye level, without shooting from above or below. The more precisely you place the points, the more accurate the result · Switch to “Thirds &amp; fifths” above to measure your face</div>',
+      legendFace:
+        '<h3>Facial thirds &amp; fifths · How to use</h3><ol>' +
+        '<li>There are <b>10 crosshairs</b> on the photo. <b>Press and drag</b> each one into place with your mouse or finger</li>' +
+        '<li><b>Thirds (4 vertical points along the center line of the face):</b><br>' +
+          DOT('#ff3b30') + 'Hairline → where the hair starts at the top of the forehead<br>' +
+          DOT('#ff9f0a') + 'Between brows → the spot between the eyebrows<br>' +
+          DOT('#ffd60a') + 'Nose base → where the nose meets the upper lip, level with the bottom of the nostrils (not the nose tip!)<br>' +
+          DOT('#ff6482') + 'Chin → the lowest point of the chin</li>' +
+        '<li><b>Fifths (6 horizontal points at eye level),</b> from left to right:<br>' +
+          DOT('#0071e3') + 'left face edge → ' + DOT('#5856d6') + 'left eye outer corner → ' + DOT('#34c759') + 'left eye inner corner (nose side) → ' +
+          DOT('#30d158') + 'right eye inner corner → ' + DOT('#5e5ce6') + 'right eye outer corner → ' + DOT('#bf5af2') + 'right face edge</li>' +
+        '<li>Hovering over or dragging a crosshair shows its name and the length of its segments. When you\'re done, check the result card below</li>' +
+        '</ol><div class="tip">Ideal: three equal thirds, and a face width of 5 eye widths · <b>Show your forehead</b> (keep hair off the hairline) · Face the camera at eye level · A traditional aesthetic guideline, just for fun</div>',
+      hsSource: 'Reference data: per-person shoulder-to-head ratios from ANSUR II, the 2012 US Army anthropometric survey (4,082 men / 1,986 women)',
+      faceSource: '“Three courts, five eyes” (三庭五眼) is a classical Chinese guideline from traditional painting and physiognomy (ideal: three equal facial thirds, face width = five eye widths). It is an aesthetic convention, not a medical standard',
+      footer: 'Just for fun · Everything runs locally in your browser; photos are never uploaded<br>' +
+        'Face the camera at eye level, without shooting from above or below. Shoulder ratio: put the head points at the widest part of the head and the shoulder points on the acromion. Thirds &amp; fifths: show your forehead and keep hair off the hairline<br>' +
+        'Shoulder categories are based on ANSUR II military measurements (caliper-measured biacromial breadth / maximum head breadth); thirds &amp; fifths is a traditional aesthetic guideline. Photos include hair and lens perspective, so treat the results as a rough guide',
+      errNoCam: 'This browser can\'t use the camera (it needs a modern browser over HTTPS or on localhost)',
+      errDenied: 'Camera access was denied. Allow the camera in your browser\'s address bar and try again',
+      errNotFound: 'No camera found. Use “Upload photo” instead',
+      errBusy: 'The camera is being used by another app. Close it and try again',
+      errStart: 'Couldn\'t start the camera: ',
+      errImg: 'Couldn\'t read that image. Try another one',
+      hsHeadL: 'Head left', hsHeadR: 'Head right', hsShL: 'Left shoulder', hsShR: 'Right shoulder',
+      fHair: 'Hairline', fBrow: 'Between brows', fNose: 'Nose base', fChin: 'Chin',
+      fFaceL: 'Left face edge', fEyeLO: 'Left eye outer', fEyeLI: 'Left eye inner', fEyeRI: 'Right eye inner', fEyeRO: 'Right eye outer', fFaceR: 'Right face edge',
+      eyeSegs: ['Left side', 'Left eye', 'Eye gap', 'Right eye', 'Right side'],
+      upper: 'Upper', middle: 'Middle', lower: 'Lower', eyeUnit: '×',
+      male: 'male', female: 'female',
+      vXN: 'Very narrow · narrower than about 95% of your sex', vN: 'Narrow · slim, delicate build', vAvg: 'Average · where the middle half of people are',
+      vB: 'Broad · clothes hang well on you', vXB: 'Very broad · top 5%, born to wear a suit',
+      hsDetail: function (s, h, n, p, p50) {
+        return 'Shoulders ' + s + ' px ÷ head ' + h + ' px' +
+          '<br>Your ratio is higher than about <b>' + p + '%</b> of the ANSUR II ' + n + ' sample (' + n + ' median P50 = ' + p50 + ')';
+      },
+      band: function (n) { return 'Gray band = ' + n + ' P25–P75 (the middle half of people) · scale 2.1–3.1'; },
+      scoreUnit: '<small> / 100</small>',
+      fv1: 'Textbook proportions · thirds and fifths spot on', fv2: 'Very well proportioned · harmonious', fv3: 'Fairly balanced · naturally attractive', fv4: 'Distinctive face · a style of its own',
+      faceDetail: function (a, b, c, eyeLine, faceW) {
+        return '<b>Thirds</b> (ideal: all 1.00×): upper ' + a + '× · middle ' + b + '× · lower ' + c + '×<br>' +
+          '<b>Fifths</b> (ideal: 1.00 eye width each): ' + eyeLine + '<br>' +
+          'Total face width <b>' + faceW + '</b> eye widths (ideal 5.00)';
+      }
+    }
+  };
+
+  // 语言优先级：网址 ?lang= → 上次选择 → 浏览器语言（中文浏览器用中文，其余用英文）
+  var lang = (function () {
+    var q = (location.search.match(/[?&]lang=(en|zh)\b/) || [])[1];
+    if (q) return q;
+    try {
+      var saved = localStorage.getItem('hsr-lang');
+      if (saved === 'en' || saved === 'zh') return saved;
+    } catch (e) {}
+    return /^zh/i.test(navigator.language || '') ? 'zh' : 'en';
+  })();
+
+  function T(key) {
+    var v = I18N[lang][key];
+    return (v !== undefined) ? v : I18N.zh[key];
+  }
+
+  var i18nEls = document.querySelectorAll('[data-i18n]');
+  for (var ie = 0; ie < i18nEls.length; ie++) i18nEls[ie]._zh = i18nEls[ie].innerHTML;
+  var langBtns = { zh: document.getElementById('langZh'), en: document.getElementById('langEn') };
 
   var video = document.getElementById('video');
   var viewStage = document.getElementById('viewStage');
@@ -225,25 +359,25 @@
   var scale = 1, offX = 0, offY = 0; // 图片坐标系 -> canvas坐标系
 
   // 点位定义。头肩比模式 4 点；三庭五眼模式 10 点（前 4 竖向三庭，后 6 横向五眼）
+  // name 是 I18N 中的键
   var HS_DEF = [
-    { name: '头左端', color: '#ff3b30' },
-    { name: '头右端', color: '#ff9f0a' },
-    { name: '左肩峰', color: '#0071e3' },
-    { name: '右肩峰', color: '#bf5af2' }
+    { name: 'hsHeadL', color: '#ff3b30' },
+    { name: 'hsHeadR', color: '#ff9f0a' },
+    { name: 'hsShL',   color: '#0071e3' },
+    { name: 'hsShR',   color: '#bf5af2' }
   ];
   var FACE_DEF = [
-    { name: '发际线', color: '#ff3b30' },
-    { name: '眉心',   color: '#ff9f0a' },
-    { name: '鼻底',   color: '#ffd60a' },
-    { name: '下巴尖', color: '#ff6482' },
-    { name: '左脸缘',   color: '#0071e3' },
-    { name: '左眼外角', color: '#5856d6' },
-    { name: '左眼内角', color: '#34c759' },
-    { name: '右眼内角', color: '#30d158' },
-    { name: '右眼外角', color: '#5e5ce6' },
-    { name: '右脸缘',   color: '#bf5af2' }
+    { name: 'fHair',  color: '#ff3b30' },
+    { name: 'fBrow',  color: '#ff9f0a' },
+    { name: 'fNose',  color: '#ffd60a' },
+    { name: 'fChin',  color: '#ff6482' },
+    { name: 'fFaceL', color: '#0071e3' },
+    { name: 'fEyeLO', color: '#5856d6' },
+    { name: 'fEyeLI', color: '#34c759' },
+    { name: 'fEyeRI', color: '#30d158' },
+    { name: 'fEyeRO', color: '#5e5ce6' },
+    { name: 'fFaceR', color: '#bf5af2' }
   ];
-  var EYE_SEG_NAMES = ['左脸缘', '左眼', '眼距', '右眼', '右脸缘'];
   var mode = 'hs';                 // 'hs' | 'face'
   var activeDef = HS_DEF;          // 当前模式的点定义
   var ptsHS = [], ptsFace = [];    // 两种模式的点集（图片自然坐标）
@@ -252,11 +386,15 @@
   var hoverIdx = -1;
   var HIT_R = 26;                  // 命中半径（css像素）
 
+  // msg 是返回文案的函数，切换语言时可重新生成
+  var errFn = null;
   function showErr(msg) {
-    errMsg.textContent = msg;
+    errFn = msg;
+    errMsg.textContent = msg();
     errMsg.style.display = 'block';
   }
   function clearErr() {
+    errFn = null;
     errMsg.style.display = 'none';
   }
 
@@ -264,11 +402,11 @@
   btnStart.addEventListener('click', function () {
     clearErr();
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showErr('当前浏览器不支持摄像头（需要 HTTPS 或本地文件环境下的现代浏览器）');
+      showErr(function () { return T('errNoCam'); });
       return;
     }
     btnStart.disabled = true;
-    btnStart.textContent = '正在开启…';
+    btnStart.textContent = T('starting');
     navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } },
       audio: false
@@ -282,13 +420,13 @@
       btnUpload.style.display = '';
     }).catch(function (e) {
       btnStart.disabled = false;
-      btnStart.textContent = '开启摄像头';
-      var map = {
-        NotAllowedError: '摄像头权限被拒绝，请在浏览器地址栏允许摄像头访问后重试',
-        NotFoundError: '没有检测到可用摄像头，可改用「上传照片」',
-        NotReadableError: '摄像头被其他应用占用，请关闭后重试'
-      };
-      showErr(map[e.name] || ('摄像头开启失败：' + (e.message || e.name)));
+      btnStart.textContent = T('start');
+      var key = {
+        NotAllowedError: 'errDenied',
+        NotFoundError: 'errNotFound',
+        NotReadableError: 'errBusy'
+      }[e.name];
+      showErr(function () { return key ? T(key) : T('errStart') + (e.message || e.name); });
       btnUpload.style.display = '';
     });
   });
@@ -385,7 +523,7 @@
       URL.revokeObjectURL(url);
       enterMarking(c.toDataURL('image/jpeg', 0.92), c.width, c.height);
     };
-    im.onerror = function () { showErr('图片读取失败，请换一张试试'); };
+    im.onerror = function () { showErr(function () { return T('errImg'); }); };
     im.src = url;
     fileInput.value = '';
   });
@@ -431,7 +569,8 @@
       // 名称标签：仅 hover / 拖动时显示
       if (hot) {
         ctx.font = '600 12px -apple-system, "PingFang SC", sans-serif';
-        var tw = ctx.measureText(activeDef[i].name).width;
+        var label = T(activeDef[i].name);
+        var tw = ctx.measureText(label).width;
         var lx = c.x + 16, ly = c.y - 16;
         // 越界翻转到左侧
         if (lx + tw + 10 > canvas.width / dpr) lx = c.x - tw - 26;
@@ -439,7 +578,7 @@
         roundRect(lx - 5, ly - 13, tw + 10, 19, 9);
         ctx.fill();
         ctx.fillStyle = '#fff';
-        ctx.fillText(activeDef[i].name, lx, ly);
+        ctx.fillText(label, lx, ly);
       }
     }
 
@@ -536,9 +675,9 @@
 
     // 标注仅在 hover / 拖动对应点时显示：三庭点 0-3，五眼点 4-9
     var hovered = (hoverIdx >= 0 || dragIdx >= 0) ? Math.max(hoverIdx, dragIdx) : -1;
-    if (hovered === 0 || hovered === 1) labelLine(c0, c1, '上庭 ' + Math.round(dist(pts[0], pts[1]) * scale) + 'px', '#ff3b30');
-    if (hovered === 1 || hovered === 2) labelLine(c1, c2, '中庭 ' + Math.round(dist(pts[1], pts[2]) * scale) + 'px', '#ff9f0a');
-    if (hovered === 2 || hovered === 3) labelLine(c2, c3, '下庭 ' + Math.round(dist(pts[2], pts[3]) * scale) + 'px', '#ff6482');
+    if (hovered === 0 || hovered === 1) labelLine(c0, c1, T('upper') + ' ' + Math.round(dist(pts[0], pts[1]) * scale) + 'px', '#ff3b30');
+    if (hovered === 1 || hovered === 2) labelLine(c1, c2, T('middle') + ' ' + Math.round(dist(pts[1], pts[2]) * scale) + 'px', '#ff9f0a');
+    if (hovered === 2 || hovered === 3) labelLine(c2, c3, T('lower') + ' ' + Math.round(dist(pts[2], pts[3]) * scale) + 'px', '#ff6482');
 
     // 五眼：各段以眼宽为单位，悬停某点时显示其两侧的段
     var eyeW = (dist(pts[5], pts[6]) + dist(pts[7], pts[8])) / 2 * scale;
@@ -551,7 +690,7 @@
         var kk = +k;
         var multiple = dist(pts[4 + kk], pts[5 + kk]) * scale / eyeW;
         var dy = (kk % 2 === 0) ? 16 : -18;
-        labelLine(e[kk], e[kk + 1], EYE_SEG_NAMES[kk] + ' ' + multiple.toFixed(2) + '眼', '#0071e3', dy);
+        labelLine(e[kk], e[kk + 1], T('eyeSegs')[kk] + ' ' + multiple.toFixed(2) + T('eyeUnit'), '#0071e3', dy);
       }
     }
   }
@@ -658,8 +797,8 @@
   // ANSUR II（2012 美军人体测量调查）逐人计算的肩宽/头宽比值分布
   // 男 N=4082: mean 2.696 sd 0.139 | 女 N=1986: mean 2.475 sd 0.137
   var REF = {
-    m: { name: '男性', mean: 2.696, sd: 0.139, p5: 2.47, p25: 2.61, p50: 2.69, p75: 2.79, p95: 2.93 },
-    f: { name: '女性', mean: 2.475, sd: 0.137, p5: 2.25, p25: 2.38, p50: 2.48, p75: 2.56, p95: 2.70 }
+    m: { name: 'male',   mean: 2.696, sd: 0.139, p5: 2.47, p25: 2.61, p50: 2.69, p75: 2.79, p95: 2.93 },
+    f: { name: 'female', mean: 2.475, sd: 0.137, p5: 2.25, p25: 2.38, p50: 2.48, p75: 2.56, p95: 2.70 }
   };
   var sex = 'm';
   var BAR_MIN = 2.1, BAR_MAX = 3.1;
@@ -714,11 +853,11 @@
 
   function verdictOf(r) {
     var R = REF[sex];
-    if (r < R.p5)  return { text: '极窄肩 · 比大约95%的同性还窄', color: '#ff9f0a' };
-    if (r < R.p25) return { text: '偏窄肩 · 清秀型', color: '#ffd60a' };
-    if (r < R.p75) return { text: '标准肩 · 一半人都在这个区间', color: '#30d158' };
-    if (r < R.p95) return { text: '宽肩 · 天生衣架子', color: '#0071e3' };
-    return { text: '超宽肩 · 宽进前5%的西装天赋', color: '#bf5af2' };
+    if (r < R.p5)  return { text: T('vXN'), color: '#ff9f0a' };
+    if (r < R.p25) return { text: T('vN'), color: '#ffd60a' };
+    if (r < R.p75) return { text: T('vAvg'), color: '#30d158' };
+    if (r < R.p95) return { text: T('vB'), color: '#0071e3' };
+    return { text: T('vXB'), color: '#bf5af2' };
   }
 
   function updateResult() {
@@ -742,13 +881,11 @@
     var ratioBig = document.getElementById('ratioBig');
     ratioBig.innerHTML = ratio.toFixed(2) + '<small> : 1</small>';
     var verdictEl = document.getElementById('verdict');
-    verdictEl.textContent = '「' + v.text + '」';
+    verdictEl.textContent = (lang === 'en') ? v.text : '「' + v.text + '」';
     verdictEl.style.color = v.color;
 
     document.getElementById('detail').innerHTML =
-      '肩宽 ' + Math.round(shoulderPx) + ' px ÷ 头宽 ' + Math.round(headPx) + ' px' +
-      '<br>你的头肩比超过 ANSUR II ' + R.name + '样本中约 <b>' + p.toFixed(0) + '%</b> 的人' +
-      '（' + R.name + 'P50 = ' + R.p50.toFixed(2) + '）';
+      T('hsDetail')(Math.round(shoulderPx), Math.round(headPx), T(R.name), p.toFixed(0), R.p50.toFixed(2));
 
     // 进度条：2.1 ~ 3.1 映射到 0 ~ 100%，叠加 P25~P75 标准带
     var pct = Math.max(0, Math.min(100, (ratio - BAR_MIN) / (BAR_MAX - BAR_MIN) * 100));
@@ -756,8 +893,7 @@
     var band = document.getElementById('stdBand');
     band.style.left = ((R.p25 - BAR_MIN) / (BAR_MAX - BAR_MIN) * 100) + '%';
     band.style.width = ((R.p75 - R.p25) / (BAR_MAX - BAR_MIN) * 100) + '%';
-    document.getElementById('youAreHere').innerHTML =
-      '灰色带 = ' + R.name + ' P25~P75（中间一半人的区间）· 刻度 2.1 ~ 3.1';
+    document.getElementById('youAreHere').innerHTML = T('band')(T(R.name));
 
     resultCard.style.display = 'block';
   }
@@ -787,30 +923,55 @@
     dev5 /= 5;
     var score = Math.max(0, Math.min(100, Math.round(100 * (1 - dev3) * (1 - dev5 * 1.2))));
 
-    document.getElementById('faceScore').innerHTML = score + '<small> 分</small>';
+    document.getElementById('faceScore').innerHTML = score + T('scoreUnit');
 
     var v;
-    if (score >= 92)      v = { text: '教科书级骨相 · 三庭五眼很正', color: '#bf5af2' };
-    else if (score >= 80) v = { text: '相当标致 · 比例协调', color: '#0071e3' };
-    else if (score >= 65) v = { text: '基本端正 · 自然耐看', color: '#30d158' };
-    else                  v = { text: '个性脸 · 自成风格', color: '#ff9f0a' };
+    if (score >= 92)      v = { text: T('fv1'), color: '#bf5af2' };
+    else if (score >= 80) v = { text: T('fv2'), color: '#0071e3' };
+    else if (score >= 65) v = { text: T('fv3'), color: '#30d158' };
+    else                  v = { text: T('fv4'), color: '#ff9f0a' };
     var fv = document.getElementById('faceVerdict');
-    fv.textContent = '「' + v.text + '」';
+    fv.textContent = (lang === 'en') ? v.text : '「' + v.text + '」';
     fv.style.color = v.color;
 
     var faceW = 0;
     for (var k3 = 0; k3 < 5; k3++) faceW += segVals[k3];
     var eyeLine = [];
-    for (var k4 = 0; k4 < 5; k4++) eyeLine.push(EYE_SEG_NAMES[k4] + ' ' + segVals[k4].toFixed(2));
+    for (var k4 = 0; k4 < 5; k4++) eyeLine.push(T('eyeSegs')[k4] + ' ' + segVals[k4].toFixed(2));
 
     document.getElementById('faceDetail').innerHTML =
-      '<b>三庭</b>（理想 1.00× 等长）：上庭 ' + (a / m).toFixed(2) + '× · 中庭 ' + (b / m).toFixed(2) +
-      '× · 下庭 ' + (c / m).toFixed(2) + '×<br>' +
-      '<b>五眼</b>（理想各 1.00 眼）：' + eyeLine.join(' · ') + '<br>' +
-      '脸宽合计 <b>' + faceW.toFixed(2) + '</b> 眼（理想 5.00 眼）';
+      T('faceDetail')((a / m).toFixed(2), (b / m).toFixed(2), (c / m).toFixed(2), eyeLine.join(' · '), faceW.toFixed(2));
 
     resultCard.style.display = 'block';
   }
+
+  /* ---------- 语言切换 ---------- */
+  function applyLang() {
+    document.documentElement.lang = (lang === 'en') ? 'en' : 'zh-CN';
+    document.title = T('title');
+    for (var i = 0; i < i18nEls.length; i++) {
+      var el = i18nEls[i];
+      el.innerHTML = (lang === 'en') ? I18N.en[el.getAttribute('data-i18n')] : el._zh;
+    }
+    if (btnStart.disabled) btnStart.textContent = T('starting');
+    langBtns.zh.classList.toggle('active', lang === 'zh');
+    langBtns.en.classList.toggle('active', lang === 'en');
+    if (errFn) errMsg.textContent = errFn();
+    if (marking) draw();
+  }
+
+  function setLang(l) {
+    if (l === lang) return;
+    lang = l;
+    try { localStorage.setItem('hsr-lang', l); } catch (e) {}
+    // 把语言写进网址，方便直接分享对应语言的链接
+    try { history.replaceState(null, '', location.pathname + '?lang=' + l + location.hash); } catch (e) {}
+    applyLang();
+  }
+  langBtns.zh.addEventListener('click', function () { setLang('zh'); });
+  langBtns.en.addEventListener('click', function () { setLang('en'); });
+
+  applyLang();
 })();
 </script>
 </body>
